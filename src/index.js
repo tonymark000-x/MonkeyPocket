@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import './styles.css';
 
 // 简化的环境变量获取函数（只支持Webpack）
 const getEnvVariable = (key) => {
