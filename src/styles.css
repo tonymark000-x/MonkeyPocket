@@ -1,13 +1,28 @@
-/* 基础样式 */
+/* 基础样式重置 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --success-color: #2ed573;
+  --error-color: #ff4757;
+  --warning-color: #ffa502;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --text-light: #888;
+  --border-color: #e1e5e9;
+  --border-radius: 8px;
+  --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary-gradient);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -35,32 +50,29 @@ body {
 }
 
 .header h1 {
-  color: #333;
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 10px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .header p {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 16px;
 }
 
-/* 用户信息样式 */
-#user-info {
-  margin-bottom: 30px;
-}
-
+/* 用户信息 */
 .user-profile {
   display: flex;
   align-items: center;
   gap: 20px;
   padding: 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: var(--secondary-gradient);
   border-radius: 15px;
+  margin-bottom: 30px;
 }
 
 .avatar {
@@ -69,28 +81,41 @@ body {
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-light);
 }
 
 .user-profile h3 {
-  color: #333;
+  color: var(--text-primary);
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 5px;
 }
 
 .user-profile p {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
+}
+
+.email-verified {
+  font-size: 12px !important;
+  margin: 5px 0 15px !important;
+}
+
+.email-verified .verified {
+  color: var(--success-color);
+}
+
+.email-verified .unverified {
+  color: var(--warning-color);
 }
 
 .btn-logout {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary-gradient);
   color: white;
   border: none;
   padding: 10px 25px;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -99,10 +124,10 @@ body {
 
 .btn-logout:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: var(--shadow-medium);
 }
 
-/* 认证表单样式 */
+/* 认证表单 */
 .auth-container {
   max-width: 400px;
   margin: 0 auto;
@@ -121,7 +146,7 @@ body {
   border: none;
   font-size: 18px;
   font-weight: 600;
-  color: #666;
+  color: var(--text-secondary);
   cursor: pointer;
   border-bottom: 3px solid transparent;
   transition: all 0.3s ease;
@@ -133,7 +158,7 @@ body {
 }
 
 .tab:hover:not(.active) {
-  color: #888;
+  color: var(--text-light);
 }
 
 .auth-form {
@@ -152,15 +177,15 @@ body {
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: #333;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
 .form-group input {
   width: 100%;
   padding: 12px 40px 12px 15px;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
   font-size: 16px;
   transition: all 0.3s ease;
 }
@@ -175,7 +200,7 @@ body {
   color: #aaa;
 }
 
-/* 密码输入框和眼睛图标 */
+/* 密码输入 */
 .password-input-wrapper {
   position: relative;
 }
@@ -187,7 +212,7 @@ body {
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: #666;
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 5px;
   display: flex;
@@ -215,50 +240,10 @@ body {
 
 .strength-text {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
-/* 验证码输入 */
-.verification-code-group {
-  display: flex;
-  gap: 10px;
-  align-items: flex-end;
-}
-
-.verification-code-input {
-  flex: 1;
-}
-
-.get-code-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 12px 15px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.3s ease;
-}
-
-.get-code-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.get-code-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.code-countdown {
-  font-size: 12px;
-  color: #666;
-  text-align: center;
-  margin-top: 5px;
-}
-
+/* 表单选项 */
 .form-options {
   display: flex;
   justify-content: space-between;
@@ -270,11 +255,13 @@ body {
   display: flex;
   align-items: center;
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
+  cursor: pointer;
 }
 
 .remember-me input {
   margin-right: 8px;
+  cursor: pointer;
 }
 
 .forgot-password {
@@ -290,17 +277,21 @@ body {
 .checkbox-group {
   display: flex;
   align-items: flex-start;
+  margin-top: 15px;
+  cursor: pointer;
 }
 
 .checkbox-group input {
   width: auto;
   margin-top: 5px;
   margin-right: 10px;
+  cursor: pointer;
 }
 
 .checkbox-group label {
   font-size: 14px;
   line-height: 1.4;
+  cursor: pointer;
 }
 
 .checkbox-group a {
@@ -312,22 +303,31 @@ body {
   text-decoration: underline;
 }
 
+/* 按钮 */
 .btn-primary {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary-gradient);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-top: 10px;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: var(--shadow-medium);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .divider {
@@ -339,7 +339,7 @@ body {
 .divider span {
   background: white;
   padding: 0 15px;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
   position: relative;
 }
@@ -358,9 +358,9 @@ body {
   width: 100%;
   padding: 14px;
   background: white;
-  color: #333;
+  color: var(--text-primary);
   border: 2px solid #ddd;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -382,10 +382,11 @@ body {
   background-color: rgba(66, 133, 244, 0.05);
 }
 
+/* 消息提示 */
 .auth-message {
   margin-top: 20px;
   padding: 15px;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   text-align: center;
   font-size: 14px;
   display: none;
@@ -407,6 +408,38 @@ body {
   background-color: #d1ecf1;
   color: #0c5460;
   border: 1px solid #bee5eb;
+}
+
+/* 页脚 */
+.footer {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.footer p {
+  margin-top: 10px;
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.footer p:first-child {
+  margin-top: 30px;
+}
+
+.footer a {
+  color: #667eea;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* 加载提示 */
+.loading-text {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 20px;
 }
 
 /* 响应式设计 */
@@ -431,6 +464,7 @@ body {
   .user-profile {
     flex-direction: column;
     text-align: center;
+    gap: 15px;
   }
   
   .avatar {
@@ -438,12 +472,14 @@ body {
     height: 70px;
   }
   
-  .verification-code-group {
-    flex-direction: column;
+  .form-group input {
+    padding: 10px 35px 10px 12px;
+    font-size: 15px;
   }
   
-  .get-code-btn {
-    width: 100%;
-    margin-top: 10px;
+  .btn-primary,
+  .btn-social {
+    padding: 12px;
+    font-size: 15px;
   }
 }

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monkey Pocket - 魔法百宝袋管理系统</title>
+  <!-- 外部资源 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+HK:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-inter bg-monkey-darker text-white min-h-screen flex flex-col monkey-bg">
+  <!-- 语言切换 -->
+  <div class="fixed top-4 right-20 z-50">
+    <div class="flex space-x-2 bg-monkey-gray/80 backdrop-blur-md rounded-full p-1 border border-monkey-gray/50">
+      <button id="langEN" class="lang-btn px-3 py-1 rounded-full text-sm font-medium text-gray-300 hover:text-white transition-all">EN</button>
+      <button id="langZH" class="lang-btn px-3 py-1 rounded-full text-sm font-medium bg-monkey-blue text-white transition-all">中文</button>
+    </div>
+  </div>
+
+  <!-- 用户账户菜单 -->
+  <div id="userMenu" class="fixed top-4 right-4 z-50 hidden">
+    <div class="relative">
+      <button id="userMenuBtn" class="flex items-center bg-monkey-gray/80 backdrop-blur-md rounded-full p-2 border border-monkey-gray/50 hover:border-monkey-blue transition-all">
+        <div class="w-8 h-8 rounded-full bg-monkey-yellow flex items-center justify-center mr-2">
+          <span class="text-monkey-darker font-bold text-sm" id="userInitial">U</span>
+        </div>
+        <span id="usernameDisplay" class="text-sm font-medium mr-2">用户</span>
+        <i class="fa fa-chevron-down text-xs"></i>
+      </button>
+      
+      <div id="userDropdown" class="absolute right-0 top-full mt-2 w-48 bg-monkey-gray/95 backdrop-blur-lg rounded-lg border border-monkey-gray/50 shadow-lg hidden">
+        <div class="p-4 border-b border-monkey-gray/50">
+          <p class="text-sm font-medium" id="dropdownUsername">用户名</p>
+          <p class="text-xs text-gray-400" id="dropdownEmail">邮箱</p>
+        </div>
+        <div class="p-2">
+          <a href="#dashboard" class="user-menu-item block px-3 py-2 text-sm rounded hover:bg-monkey-gray/70 transition-colors" data-i18n="userMenuDashboard">仪表板</a>
+          <a href="#activate" class="user-menu-item block px-3 py-2 text-sm rounded hover:bg-monkey-gray/70 transition-colors" data-i18n="userMenuActivate">激活设备</a>
+          <a href="#myPockets" class="user-menu-item block px-3 py-2 text-sm rounded hover:bg-monkey-gray/70 transition-colors" data-i18n="userMenuMyPockets">我的百宝袋</a>
+          <a href="#items" class="user-menu-item block px-3 py-2 text-sm rounded hover:bg-monkey-gray/70 transition-colors" data-i18n="userMenuItems">我的物品</a>
+          <a href="#storage" class="user-menu-item block px-3 py-2 text-sm rounded hover:bg-monkey-gray/70 transition-colors" data-i18n="userMenuStorage">购买存储格</a>
+          <a href="#retrieve" class="user-menu-item block px-3 py-2 text-sm rounded hover:bg-monkey-gray/70 transition-colors" data-i18n="userMenuRetrieve">远程取物</a>
+          <div class="border-t border-monkey-gray/50 my-2"></div>
+          <button id="logoutBtn" class="w-full text-left px-3 py-2 text-sm rounded hover:bg-monkey-red/20 hover:text-monkey-red transition-colors" data-i18n="userMenuLogout">退出登录</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 管理员菜单 -->
+  <div id="adminMenu" class="fixed top-4 right-4 z-50 hidden">
+    <div class="relative">
+      <button id="adminMenuBtn" class="flex items-center bg-monkey-orange/80 backdrop-blur-md rounded-full p-2 border border-monkey-orange/50 hover:border-monkey-orange transition-all">
+        <div class="w-8 h-8 rounded-full bg-monkey-orange flex items-center justify-center mr-2">
+          <span class="text-monkey-darker font-bold text-sm">A</span>
+        </div>
+        <span id="adminNameDisplay" class="text-sm font-medium mr-2">管理员</span>
+        <i class="fa fa-chevron-down text-xs"></i>
+      </button>
+      
+      <div id="adminDropdown" class="absolute right-0 top-full mt-2 w-48 bg-monkey-gray/95 backdrop-blur-lg rounded-lg border border-monkey-gray/50 shadow-lg hidden">
+        <div class="p-4 border-b border-monkey-gray/50">
+          <p class="text-sm font-medium">MonkeyKingdomCEO</p>
+          <p class="text-xs text-gray-400">管理员账户</p>
+        </div>
+        <div class="p-2">
+          <a href="#adminDashboard" class="admin-menu-item block px-3 py-2 text-sm rounded hover:bg-monkey-gray/70 transition-colors">管理后台</a>
+          <a href="#adminCreateCodes" class="admin-menu-item block px-3 py-2 text-sm rounded hover:bg-monkey-gray/70 transition-colors">生成激活码</a>
+          <a href="#adminViewUsers" class="admin-menu-item block px-3 py-2 text-sm rounded hover:bg-monkey-gray/70 transition-colors">查看用户</a>
+          <a href="#adminViewPockets" class="admin-menu-item block px-3 py-2 text-sm rounded hover:bg-monkey-gray/70 transition-colors">查看百宝袋</a>
+          <div class="border-t border-monkey-gray/50 my-2"></div>
+          <button id="adminLogoutBtn" class="w-full text-left px-3 py-2 text-sm rounded hover:bg-monkey-red/20 hover:text-monkey-red transition-colors">退出管理后台</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 导航栏 -->
+  <header id="navbar" class="fixed w-full z-40 transition-all duration-300 bg-monkey-darker/95 backdrop-blur-md border-b border-monkey-gray/30">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <!-- 品牌Logo -->
+        <div class="flex items-center space-x-2 cursor-pointer" id="logoHome">
+          <div class="w-10 h-10 rounded-full bg-monkey-yellow flex items-center justify-center">
+            <span class="text-monkey-darker font-bold text-xl">MK</span>
+          </div>
+          <span class="text-2xl font-bold text-shadow">Monkey <span class="text-monkey-yellow">Pocket</span></span>
+        </div>
+        
+        <!-- 导航链接 - 桌面端 -->
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="#dashboard" class="text-gray-300 hover:text-monkey-yellow transition-colors duration-300 page-link" data-i18n="navDashboard">仪表板</a>
+          <a href="#activate" class="text-gray-300 hover:text-monkey-yellow transition-colors duration-300 page-link" data-i18n="navActivate">激活设备</a>
+          <a href="#myPockets" class="text-gray-300 hover:text-monkey-yellow transition-colors duration-300 page-link" data-i18n="navMyPockets">我的百宝袋</a>
+          <a href="#items" class="text-gray-300 hover:text-monkey-yellow transition-colors duration-300 page-link" data-i18n="navItems">我的物品</a>
+          <a href="#storage" class="text-gray-300 hover:text-monkey-yellow transition-colors duration-300 page-link" data-i18n="navStorage">购买存储格</a>
+          <a href="#retrieve" class="text-gray-300 hover:text-monkey-yellow transition-colors duration-300 page-link" data-i18n="navRetrieve">远程取物</a>
+          <a href="#adminLogin" id="adminNavLink" class="text-gray-300 hover:text-monkey-orange transition-colors duration-300 page-link">管理员入口</a>
+        </nav>
+        
+        <!-- 移动端菜单按钮 -->
+        <button id="menuBtn" class="md:hidden text-white focus:outline-none">
+          <i class="fa fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  
+  <!-- 移动端菜单 -->
+  <div id="mobileMenu" class="fixed top-16 left-0 w-full bg-monkey-darker/95 backdrop-blur-md border-b border-monkey-gray/30 z-30 hidden md:hidden">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex flex-col space-y-1">
+        <a href="#dashboard" class="block py-2 text-gray-300 hover:text-monkey-yellow transition-colors duration-300 page-link" data-i18n="navDashboard">仪表板</a>
+        <a href="#activate" class="block py-2 text-gray-300 hover:text-monkey-yellow transition-colors duration-300 page-link" data-i18n="navActivate">激活设备</a>
+        <a href="#myPockets" class="block py-2 text-gray-300 hover:text-monkey-yellow transition-colors duration-300 page-link" data-i18n="navMyPockets">我的百宝袋</a>
+        <a href="#items" class="block py-2 text-gray-300 hover:text-monkey-yellow transition-colors duration-300 page-link" data-i18n="navItems">我的物品</a>
+        <a href="#storage" class="block py-2 text-gray-300 hover:text-monkey-yellow transition-colors duration-300 page-link" data-i18n="navStorage">购买存储格</a>
+        <a href="#retrieve" class="block py-2 text-gray-300 hover:text-monkey-yellow transition-colors duration-300 page-link" data-i18n="navRetrieve">远程取物</a>
+        <a href="#adminLogin" id="mobileAdminNavLink" class="block py-2 text-gray-300 hover:text-monkey-orange transition-colors duration-300 page-link hidden">管理员入口</a>
+        <div id="mobileUserMenu" class="pt-2 border-t border-monkey-gray/50 hidden">
+          <button id="mobileLogoutBtn" class="w-full text-left py-2 text-gray-300 hover:text-monkey-red transition-colors" data-i18n="userMenuLogout">退出登录</button>
+        </div>
+        <div id="mobileAdminMenu" class="pt-2 border-t border-monkey-gray/50 hidden">
+          <button id="mobileAdminLogoutBtn" class="w-full text-left py-2 text-gray-300 hover:text-monkey-red transition-colors">退出管理后台</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 管理员登录表单 -->
+  <div id="adminLoginForm" class="bg-monkey-gray/30 backdrop-blur-sm rounded-xl p-8 border border-monkey-gray/50 hidden">
+    <h2 class="text-2xl font-bold mb-6 text-center text-monkey-orange">管理员登录</h2>
+    
+    <form id="adminLoginFormElement" class="space-y-4">
+      <div>
+        <label for="adminUsername" class="block text-sm font-medium text-gray-300 mb-1">管理员账号</label>
+        <input type="text" id="adminUsername" class="w-full bg-monkey-gray/50 border border-monkey-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-monkey-orange transition-colors" placeholder="MonkeyKingdomCEO" required>
+      </div>
+      
+      <div>
+        <label for="adminPassword" class="block text-sm font-medium text-gray-300 mb-1">管理员密码</label>
+        <input type="password" id="adminPassword" class="w-full bg-monkey-gray/50 border border-monkey-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-monkey-orange transition-colors" placeholder="••••••••" required>
+      </div>
+      
+      <button type="submit" class="w-full bg-monkey-orange hover:bg-monkey-orange/90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-[1.02] glow-orange">
+        管理员登录
+      </button>
+    </form>
+    
+    <div class="text-center mt-6">
+      <button id="backToUserLogin" class="text-sm text-monkey-blue hover:text-monkey-blue/80 transition-colors">
+        <i class="fa fa-arrow-left mr-1"></i> <span data-i18n="backToUserLogin">返回用户登录</span>
+      </button>
+    </div>
+    
+    <div id="adminLoginError" class="hidden bg-monkey-red/20 border border-monkey-red/50 rounded-lg p-4 mt-6">
+      <div class="flex items-start">
+        <i class="fa fa-times-circle text-monkey-red text-xl mt-1 mr-3"></i>
+        <div>
+          <h4 class="font-medium text-monkey-red">管理员登录失败</h4>
+          <p class="text-sm text-gray-300 mt-1" id="adminLoginErrorMsg">账号或密码不正确</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主内容区域 (登录后显示) -->
+  <main id="mainContent" class="hidden">
+    <!-- 仪表板 -->
+    <section id="dashboard" class="pt-32 pb-20 page-section page-transition">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 仪表板内容 -->
+      </div>
+    </section>
+  </main>
+
+  <!-- 管理后台区域 -->
+  <main id="adminContent" class="hidden">
+    <!-- 管理员仪表板 -->
+    <section id="adminDashboard" class="pt-32 pb-20 page-section page-transition">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-[clamp(2rem,4vw,3rem)] font-extrabold leading-tight mb-6 gradient-text">
+          Monkey Pocket <span class="text-monkey-orange">管理后台</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-3xl">
+          欢迎使用Monkey Pocket管理后台。在这里您可以管理激活码、查看用户信息和监控系统状态。
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <!-- 统计卡片1 -->
+          <div class="bg-monkey-gray/30 backdrop-blur-sm rounded-xl p-6 border border-monkey-gray/50">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-full bg-monkey-orange/20 flex items-center justify-center mr-4">
+                <i class="fa fa-key text-monkey-orange text-2xl"></i>
+              </div>
+              <div>
+                <!-- 统计内容 -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 认证页面 -->
+  <section id="authPage" class="min-h-screen flex items-center justify-center p-4 pt-20">
+    <div class="w-full max-w-md">
+      <div class="bg-monkey-gray/30 backdrop-blur-sm rounded-xl p-8 border border-monkey-gray/50">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 rounded-full bg-monkey-yellow flex items-center justify-center mx-auto mb-4">
+            <span class="text-monkey-darker font-bold text-2xl">MK</span>
+          </div>
+          <h1 class="text-2xl font-bold">Monkey <span class="text-monkey-yellow">Pocket</span></h1>
+          <p class="text-gray-400 mt-2" data-i18n="authLoginTitle">登录您的账户</p>
+        </div>
+        
+        <!-- 登录/注册选项卡 -->
+        <div class="flex border-b border-monkey-gray/50 mb-6">
+          <button id="showLogin" class="flex-1 py-2 text-center font-medium bg-monkey-blue text-white">
+            <span data-i18n="authLoginTab">登录</span>
+          </button>
+          <button id="showRegister" class="flex-1 py-2 text-center font-medium text-gray-300">
+            <span data-i18n="authRegisterTab">注册</span>
+          </button>
+        </div>
+        
+        <!-- Firebase 登录方式 -->
+        <div id="firebaseAuthContainer">
+          <!-- 邮箱登录表单 -->
+          <div id="emailLoginForm" class="space-y-4">
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-300 mb-1" data-i18n="authEmailLabel">邮箱地址</label>
+              <input type="email" id="email" class="w-full bg-monkey-gray/50 border border-monkey-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-monkey-blue transition-colors" placeholder="your@email.com" required>
+            </div>
+            
+            <div>
+              <label for="password" class="block text-sm font-medium text-gray-300 mb-1" data-i18n="authPasswordLabel">密码</label>
+              <input type="password" id="password" class="w-full bg-monkey-gray/50 border border-monkey-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-monkey-blue transition-colors" placeholder="••••••••" required>
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <label class="flex items-center">
+                <input type="checkbox" class="rounded bg-monkey-gray/50 border-monkey-gray text-monkey-blue focus:ring-monkey-blue" data-i18n="authRememberMe">
+                <span class="ml-2 text-sm text-gray-300" data-i18n="authRememberMe">记住我 (30天自动登录)</span>
+              </label>
+            </div>
+            
+            <button id="emailLoginBtn" class="w-full bg-monkey-blue hover:bg-monkey-blue/90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-[1.02] glow">
+              <span data-i18n="authLoginButton">登录</span>
+            </button>
+          </div>
+          
+          <!-- 分隔线 -->
+          <div class="my-6 flex items-center">
+            <div class="flex-1 border-t border-monkey-gray/50"></div>
+            <span class="mx-4 text-sm text-gray-500">或使用</span>
+            <div class="flex-1 border-t border-monkey-gray/50"></div>
+          </div>
+          
+          <!-- Google 登录按钮 -->
+          <button id="googleLoginBtn" class="w-full bg-white hover:bg-gray-100 text-gray-800 font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center">
+            <i class="fa fa-google mr-2"></i>
+            <span>使用 Google 账号登录</span>
+          </button>
+          
+          <div class="text-center mt-6">
+            <button id="showAdminLogin" class="text-sm text-monkey-orange hover:text-monkey-orange/80 transition-colors">
+              <span data-i18n="adminLoginLink">管理员登录</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 错误消息 -->
+        <div id="authError" class="hidden bg-monkey-red/20 border border-monkey-red/50 rounded-lg p-4 mt-6">
+          <div class="flex items-start">
+            <i class="fa fa-times-circle text-monkey-red text-xl mt-1 mr-3"></i>
+            <div>
+              <h4 class="font-medium text-monkey-red" data-i18n="authLoginErrorTitle">登录失败</h4>
+              <p class="text-sm text-gray-300 mt-1" id="authErrorMsg">请检查您的账号和密码</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-monkey-darker border-t border-monkey-gray/30 py-12 mt-auto">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <div class="w-8 h-8 rounded-full bg-monkey-yellow flex items-center justify-center">
+              <span class="text-monkey-darker font-bold text-sm">MK</span>
+            </div>
+            <span class="text-xl font-bold">Monkey <span class="text-monkey-yellow">Pocket</span></span>
+          </div>
+          <p class="text-gray-400 text-sm">魔法百宝袋管理系统，让您的物品管理变得简单而有趣。</p>
+        </div>
+        
+        <div>
+          <h4 class="text-white font-medium mb-4">公司</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-monkey-yellow transition-colors">关于我们</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-monkey-yellow transition-colors">联系我们</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-monkey-yellow transition-colors">加入我们</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-monkey-yellow transition-colors" data-i18n="footerCompany4">隐私政策</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-monkey-yellow transition-colors" data-i18n="footerCompany5">服务条款</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-monkey-gray/30 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-500 text-sm mb-4 md:mb-0">
+          &copy; 2025 Monkey Kingdom. <span data-i18n="footerRights">版权所有。</span>
+        </p>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors" data-i18n="footerPrivacy">隐私政策</a>
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors" data-i18n="footerTerms">服务条款</a>
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors" data-i18n="footerCookies">Cookie政策</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
