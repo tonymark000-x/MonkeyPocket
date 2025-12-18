@@ -1,5 +1,15 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { 
+  getAuth, 
+  onAuthStateChanged, 
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  signOut 
+} from 'firebase/auth';
 
 import './styles.css';
 import translations from './translations.json';

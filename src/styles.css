@@ -71,3 +71,37 @@ body {
   color: var(--monkey-yellow);
   border-bottom-color: var(--monkey-yellow);
 }
+
+/* 密码强度样式 */
+.strength-bar {
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+  margin-top: 5px;
+  transition: width 0.3s ease;
+}
+
+.strength-bar.weak {
+  width: 25%;
+  background: #ff4444;
+}
+
+.strength-bar.medium {
+  width: 50%;
+  background: #ffdd44;
+}
+
+.strength-bar.strong {
+  width: 75%;
+  background: #44dd44;
+}
+
+.strength-bar.very-strong {
+  width: 100%;
+  background: #00C851;
+}
+
+/* 验证模态框样式 */
+#verificationModal {
+  z-index: 1000;
+}
