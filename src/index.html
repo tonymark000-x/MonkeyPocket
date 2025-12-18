@@ -254,42 +254,6 @@
               <span data-i18n="authLoginButton">登录</span>
             </button>
           </div>
-
-          <div id="emailRegisterForm" class="auth-form space-y-4">
-            <div>
-              <label for="registerEmail" class="block text-sm font-medium text-gray-300 mb-1" data-i18n="authEmailLabel">邮箱地址</label>
-              <input type="email" id="registerEmail" class="w-full bg-monkey-gray/50 border border-monkey-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-monkey-blue transition-colors" placeholder="your@email.com" required>
-            </div>
-  
-            <div>
-              <label for="registerPassword" class="block text-sm font-medium text-gray-300 mb-1" data-i18n="authPasswordLabel">密码</label>
-              <input type="password" id="registerPassword" class="w-full bg-monkey-gray/50 border border-monkey-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-monkey-blue transition-colors" placeholder="••••••••" required>
-              <div class="password-strength mt-2">
-                <div class="strength-bar"></div>
-                <div class="strength-text" data-i18n="authPasswordStrength"></div>
-              </div>
-            </div>
-  
-            <div class="checkbox-group">
-              <input type="checkbox" id="termsAgree" required>
-              <label for="termsAgree" data-i18n="authAgreeTerms">我同意服务条款和隐私政策</label>
-            </div>
-
-            <button type="button" id="registerBtn" class="w-full py-3 bg-monkey-blue text-white rounded-lg font-medium hover:bg-monkey-blue/80 transition-colors">
-              <span data-i18n="authRegisterBtn">注册</span>
-            </button>
-          </div>
-
-        <!-- 验证提示模态框 -->
-        <div id="verificationModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 hidden">
-          <div class="bg-monkey-dark p-6 rounded-xl max-w-md w-full">
-            <h3 class="text-xl font-bold text-white mb-2" data-i18n="authVerifyTitle">验证您的邮箱</h3>
-            <p class="text-gray-300 mb-4" data-i18n="authVerifyMessage">我们已向您的邮箱发送了验证链接，请查收并点击链接完成验证。</p>
-            <button id="resendVerification" class="w-full py-2 bg-monkey-blue text-white rounded-lg font-medium">
-              <span data-i18n="authResendVerify">重新发送验证邮件</span>
-            </button>
-          </div>
-        </div>
           
           <!-- 分隔线 -->
           <div class="my-6 flex items-center">
