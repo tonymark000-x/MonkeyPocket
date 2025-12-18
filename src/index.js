@@ -1,3 +1,6 @@
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+
 // 简化的环境变量获取函数（只支持Webpack）
 const getEnvVariable = (key) => {
   if (typeof process !== 'undefined' && process.env && process.env[key]) {
@@ -6,45 +9,40 @@ const getEnvVariable = (key) => {
   return '';
 };
 
-// Firebase 配置 - 从环境变量读取
-const firebaseConfig = {
-  apiKey: getEnvVariable('VITE_FIREBASE_API_KEY'),
-  authDomain: getEnvVariable('VITE_FIREBASE_AUTH_DOMAIN'),
-  projectId: getEnvVariable('VITE_FIREBASE_PROJECT_ID'),
-  storageBucket: getEnvVariable('VITE_FIREBASE_STORAGE_BUCKET'),
-  messagingSenderId: getEnvVariable('VITE_FIREBASE_MESSAGING_SENDER_ID'),
-  appId: getEnvVariable('VITE_FIREBASE_APP_ID')
-};
+// 检查并加载 Firebase 配置的函数
+function checkFirebaseConfig() {
+  const config = {
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID
+  };
 
-// 管理员配置 - 从环境变量读取
-const ADMIN_CONFIG = {
-  username: getEnvVariable('VITE_ADMIN_USERNAME') || 'MonkeyKingdomCEO',
-  password: getEnvVariable('VITE_ADMIN_PASSWORD') || 'default_password'
-};
 
-// 初始化Firebase
-import { initializeApp } from 'firebase/app';
-import { 
-  getAuth, 
-  onAuthStateChanged, 
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  signOut 
-} from 'firebase/auth';
+  // 检查必填字段
+  const requiredFields = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'];
+  const missingFields = requiredFields.filter(field => !config[field]);
 
-// 验证Firebase配置是否完整
-const checkFirebaseConfig = () => {
-  const requiredKeys = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'];
-  const missingKeys = requiredKeys.filter(key => !firebaseConfig[key]);
-  
-  if (missingKeys.length > 0) {
-    console.warn(`Firebase配置不完整，缺少以下字段: ${missingKeys.join(', ')}`);
-    console.warn('请检查.env文件中的Firebase配置是否正确');
+  if (missingFields.length > 0) {
+    console.error(`Firebase配置不完整，缺少以下字段: ${missingFields.join(', ')}`);
+    console.error('请检查.env文件中的Firebase配置是否正确');
     return false;
   }
-  return true;
-};
+  return config;
+}
+
+// 初始化 Firebase
+const firebaseConfig = checkFirebaseConfig();
+
+
+if (firebaseConfig) {
+  const firebase = initializeApp(firebaseConfig);
+} else {
+  console.log('使用模拟的Firebase Auth进行开发');
+  // 模拟 Auth 逻辑（可选）
+}
 
 // 只有配置完整时才初始化Firebase
 let app, auth;
@@ -264,12 +262,47 @@ const AppState = {
     }
   },
   
-  // 设置事件监听器
-  setupEventListeners() {
+// 设置事件监听器
+setupEventListeners() {
+    // 绑定this上下文，方便后续移除监听器
+    this.handleScroll = this.handleScroll.bind(this);
+    this.handleDocumentClick = this.handleDocumentClick.bind(this);
+    this.handleMenuClick = this.handleMenuClick.bind(this);
+    this.handleAnchorClick = this.handleAnchorClick.bind(this);
+    this.handleLogoClick = this.handleLogoClick.bind(this);
+
     // 语言切换
+    this.bindLanguageEvents();
+    
+    // 用户和管理员菜单相关
+    this.bindMenuEvents();
+    
+    // 登录/注册相关
+    this.bindAuthEvents();
+    
+    // 滚动事件 - 导航栏样式变化
+    window.addEventListener('scroll', this.handleScroll);
+    
+    // 移动端菜单
+    document.getElementById('menuBtn').addEventListener('click', this.handleMenuClick);
+    
+    // 平滑滚动和页面切换
+    document.querySelectorAll('.page-link').forEach(anchor => {
+      anchor.addEventListener('click', this.handleAnchorClick);
+    });
+    
+    // Logo点击返回首页
+    document.getElementById('logoHome').addEventListener('click', this.handleLogoClick);
+  },
+
+  // 语言切换事件绑定
+  bindLanguageEvents() {
     document.getElementById('langEN').addEventListener('click', () => this.changeLanguage('en'));
     document.getElementById('langZH').addEventListener('click', () => this.changeLanguage('zh'));
-    
+  },
+
+  // 菜单相关事件绑定
+  bindMenuEvents() {
     // 用户菜单切换
     document.getElementById('userMenuBtn').addEventListener('click', () => {
       document.getElementById('userDropdown').classList.toggle('hidden');
@@ -281,29 +314,19 @@ const AppState = {
     });
     
     // 点击其他地方关闭下拉菜单
-    document.addEventListener('click', (e) => {
-      const userMenu = document.getElementById('userMenuBtn');
-      const userDropdown = document.getElementById('userDropdown');
-      const adminMenu = document.getElementById('adminMenuBtn');
-      const adminDropdown = document.getElementById('adminDropdown');
-      
-      if (!userMenu.contains(e.target) && !userDropdown.contains(e.target)) {
-        userDropdown.classList.add('hidden');
-      }
-      
-      if (!adminMenu.contains(e.target) && !adminDropdown.contains(e.target)) {
-        adminDropdown.classList.add('hidden');
-      }
-    });
+    document.addEventListener('click', this.handleDocumentClick);
     
     // 登出按钮
     document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
     document.getElementById('mobileLogoutBtn').addEventListener('click', () => this.logout());
-    
+
     // 管理员登出
     document.getElementById('adminLogoutBtn').addEventListener('click', () => this.adminLogout());
     document.getElementById('mobileAdminLogoutBtn').addEventListener('click', () => this.adminLogout());
-    
+  },
+
+  // 认证相关事件绑定
+  bindAuthEvents() {
     // 登录/注册切换
     document.getElementById('showLogin').addEventListener('click', () => this.showLoginForm());
     document.getElementById('showRegister').addEventListener('click', () => this.showRegisterForm());
@@ -321,70 +344,101 @@ const AppState = {
       e.preventDefault();
       this.handleAdminLogin();
     });
+  },
+
+  // 处理滚动事件
+  handleScroll() {
+    const navbar = document.getElementById('navbar');
+    if (window.scrollY > 10) {
+      navbar.classList.add('py-2', 'bg-monkey-darker/95');
+      navbar.classList.remove('py-4');
+    } else {
+      navbar.classList.remove('py-2', 'bg-monkey-darker/95');
+      navbar.classList.add('py-4');
+    }
+},
+
+// 处理文档点击事件（关闭下拉菜单）
+handleDocumentClick(e) {
+    const userMenu = document.getElementById('userMenuBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const adminMenu = document.getElementById('adminMenuBtn');
+    const adminDropdown = document.getElementById('adminDropdown');
     
-    // 滚动事件 - 导航栏样式变化
-    window.addEventListener('scroll', () => {
-      const navbar = document.getElementById('navbar');
-      if (window.scrollY > 10) {
-        navbar.classList.add('py-2', 'bg-monkey-darker/95');
-        navbar.classList.remove('py-4');
-      } else {
-        navbar.classList.remove('py-2', 'bg-monkey-darker/95');
-        navbar.classList.add('py-4');
-      }
-    });
+    if (!userMenu.contains(e.target) && !userDropdown.contains(e.target)) {
+      userDropdown.classList.add('hidden');
+    }
     
-    // 移动端菜单
-    const menuBtn = document.getElementById('menuBtn');
+    if (!adminMenu.contains(e.target) && !adminDropdown.contains(e.target)) {
+      adminDropdown.classList.add('hidden');
+    }
+},
+
+// 处理菜单点击事件
+handleMenuClick() {
     const mobileMenu = document.getElementById('mobileMenu');
+    const menuBtn = document.getElementById('menuBtn');
     
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-      if (mobileMenu.classList.contains('hidden')) {
-        menuBtn.innerHTML = '<i class="fa fa-bars text-2xl"></i>';
-      } else {
-        menuBtn.innerHTML = '<i class="fa fa-times text-2xl"></i>';
-      }
-    });
+    mobileMenu.classList.toggle('hidden');
+    if (mobileMenu.classList.contains('hidden')) {
+      menuBtn.innerHTML = '<i class="fa fa-bars text-2xl"></i>';
+    } else {
+      menuBtn.innerHTML = '<i class="fa fa-times text-2xl"></i>';
+    }
+},
+
+// 处理锚点点击事件
+handleAnchorClick(e) {
+    e.preventDefault();
     
-    // 平滑滚动和页面切换
+    const targetId = e.currentTarget.getAttribute('href').substring(1);
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuBtn = document.getElementById('menuBtn');
+    
+    if (this.currentAdmin) {
+      this.showAdminPage(targetId);
+    } else if (this.currentUser) {
+      this.showPage(targetId);
+    } else {
+      // 如果用户未登录，显示登录页面
+      this.showAuthPage();
+    }
+    
+    // 关闭移动端菜单
+    if (!mobileMenu.classList.contains('hidden')) {
+      mobileMenu.classList.add('hidden');
+      menuBtn.innerHTML = '<i class="fa fa-bars text-2xl"></i>';
+    }
+    
+    // 滚动到顶部
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+},
+
+// 处理Logo点击事件
+handleLogoClick() {
+    if (this.currentAdmin) {
+      this.showAdminPage('adminDashboard');
+    } else if (this.currentUser) {
+      this.showPage('dashboard');
+    } else {
+      this.showAuthPage();
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+},
+
+// 移除事件监听器（在组件销毁时调用）
+removeEventListeners() {
+    window.removeEventListener('scroll', this.handleScroll);
+    document.removeEventListener('click', this.handleDocumentClick);
+    
+    const menuBtn = document.getElementById('menuBtn');
+    menuBtn.removeEventListener('click', this.handleMenuClick);
+    
     document.querySelectorAll('.page-link').forEach(anchor => {
-      anchor.addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        const targetId = anchor.getAttribute('href').substring(1);
-        
-        if (this.currentAdmin) {
-          this.showAdminPage(targetId);
-        } else if (this.currentUser) {
-          this.showPage(targetId);
-        } else {
-          // 如果用户未登录，显示登录页面
-          this.showAuthPage();
-        }
-        
-        // 关闭移动端菜单
-        if (!mobileMenu.classList.contains('hidden')) {
-          mobileMenu.classList.add('hidden');
-          menuBtn.innerHTML = '<i class="fa fa-bars text-2xl"></i>';
-        }
-        
-        // 滚动到顶部
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+      anchor.removeEventListener('click', this.handleAnchorClick);
     });
     
-    // Logo点击返回首页
-    document.getElementById('logoHome').addEventListener('click', () => {
-      if (this.currentAdmin) {
-        this.showAdminPage('adminDashboard');
-      } else if (this.currentUser) {
-        this.showPage('dashboard');
-      } else {
-        this.showAuthPage();
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    document.getElementById('logoHome').removeEventListener('click', this.handleLogoClick);
   },
   
   // 初始化语言
