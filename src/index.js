@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+
 import './styles.css';
+import translations from './translations.json';
 
 // 简化的环境变量获取函数（只支持Webpack）
 const getEnvVariable = (key) => {
@@ -13,12 +15,12 @@ const getEnvVariable = (key) => {
 // 检查并加载 Firebase 配置的函数
 function checkFirebaseConfig() {
   const config = {
-    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_FIREBASE_APP_ID
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_APP_ID
   };
 
 
@@ -37,13 +39,18 @@ function checkFirebaseConfig() {
 // 初始化 Firebase
 const firebaseConfig = checkFirebaseConfig();
 
-
 if (firebaseConfig) {
   const firebase = initializeApp(firebaseConfig);
 } else {
   console.log('使用模拟的Firebase Auth进行开发');
   // 模拟 Auth 逻辑（可选）
 }
+
+//定义 ADMIN_CONFIG
+const ADMIN_CONFIG = {
+  username: process.env.ADMIN_USERNAME || 'MonkeyKingdomCEO',
+  password: process.env.ADMIN_PASSWORD || 'default_password'
+};
 
 // 只有配置完整时才初始化Firebase
 let app, auth;
@@ -488,13 +495,12 @@ removeEventListeners() {
   
   // 更新页面翻译
   updateTranslations() {
-    this.getTranslations().then(translations => {
-      document.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        if (translations && translations[key]) {
-          element.innerHTML = translations[key];
-        }
-      });
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (translations[this.currentLang] && translations[this.currentLang][key]) {
+        el.innerHTML = translations[this.currentLang][key];
+    }
     });
   },
   
