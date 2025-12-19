@@ -121,6 +121,7 @@ const AppState = {
     this.setupEventListeners();
     this.initLanguage();
     this.showAuthPage();
+    this.bindLogoutEvents();
     
     if (Object.keys(this.activationCodes).length === 0) {
       this.createDemoActivationCodes();
@@ -132,6 +133,7 @@ const AppState = {
      }
     this.setupFirebaseAuthListener();
   },
+  
   
   // 添加显示管理员登录表单的方法
 showAdminLoginForm() {
@@ -157,6 +159,35 @@ showAdminLoginForm() {
     });
   },
   
+  //登出事件绑定方法
+bindLogoutEvents() {
+    // 用户登出
+    document.getElementById('logoutBtn').addEventListener('click', () => this.handleLogout());
+    document.getElementById('mobileLogoutBtn').addEventListener('click', () => this.handleLogout());
+    
+    // 管理员登出
+    document.getElementById('adminLogoutBtn').addEventListener('click', () => this.handleAdminLogout());
+    document.getElementById('mobileAdminLogoutBtn').addEventListener('click', () => this.handleAdminLogout());
+},
+
+// 实现用户登出处理
+handleLogout() {
+    // 关闭下拉菜单
+    document.getElementById('userDropdown').classList.add('hidden');
+    
+    // 调用Firebase登出
+    signOut(auth).then(() => {
+        // 登出成功
+        this.currentUser = null;
+        this.showAuthPage();
+        // 隐藏导航栏
+        document.getElementById('navbar').classList.add('hidden');
+        // 隐藏移动端菜单
+        document.getElementById('mobileMenu').classList.add('hidden');
+    }).catch((error) => {
+        console.error('登出失败:', error);
+    });
+},
   // 处理Firebase登录成功
 handleFirebaseLogin(user) {
   this.currentUser = {
@@ -182,6 +213,7 @@ handleFirebaseLogin(user) {
   
   // 确保调用显示主内容的方法
   this.showMainContent();  // 关键修复：确保登录后显示主内容
+  document.getElementById('navbar').classList.remove('hidden');
   this.updateDashboard();
   this.showPage('dashboard');
 },
@@ -697,24 +729,21 @@ handleFirebaseLogin(user) {
   
   // 显示认证页面
   showAuthPage() {
-    const mainContent = document.getElementById('mainContent');
-    const adminContent = document.getElementById('adminContent');
-    const authPage = document.getElementById('authPage');
-    
-    if (mainContent) mainContent.classList.add('hidden');
-    if (adminContent) adminContent.classList.add('hidden');
-    if (authPage) authPage.classList.remove('hidden');
-    
+    document.getElementById('authPage').classList.remove('hidden');
+    document.getElementById('mainContent').classList.add('hidden');
+    document.getElementById('adminContent').classList.add('hidden');
+    // 隐藏导航栏
+    document.getElementById('navbar').classList.add('hidden');
     this.showLoginForm();
   },
   
   // 显示主内容
   showMainContent() {
-      // 隐藏认证页面，显示主内容
-  document.getElementById('authPage').classList.add('hidden');
-  document.getElementById('mainContent').classList.remove('hidden');
-  document.getElementById('adminContent').classList.add('hidden');
-  
+    document.getElementById('authPage').classList.add('hidden');
+    document.getElementById('mainContent').classList.remove('hidden');
+    document.getElementById('adminContent').classList.add('hidden');
+    // 显示导航栏
+    document.getElementById('navbar').classList.remove('hidden');
   // 显示用户菜单，隐藏管理员菜单
   document.getElementById('userMenu').classList.remove('hidden');
   document.getElementById('adminMenu').classList.add('hidden');
@@ -733,13 +762,11 @@ handleFirebaseLogin(user) {
   
   // 显示管理员内容
   showAdminContent() {
-    const authPage = document.getElementById('authPage');
-    const mainContent = document.getElementById('mainContent');
-    const adminContent = document.getElementById('adminContent');
-    
-    if (authPage) authPage.classList.add('hidden');
-    if (mainContent) mainContent.classList.add('hidden');
-    if (adminContent) adminContent.classList.remove('hidden');
+    document.getElementById('authPage').classList.add('hidden');
+    document.getElementById('mainContent').classList.add('hidden');
+    document.getElementById('adminContent').classList.remove('hidden');
+    // 显示导航栏
+    document.getElementById('navbar').classList.remove('hidden');
   },
   
   // 空实现方法（避免报错）
