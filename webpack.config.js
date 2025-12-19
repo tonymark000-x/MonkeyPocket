@@ -8,7 +8,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
   // 入口文件
-  entry: './src/index.js',
+  entry: './src/js/index.js',
   
   // 输出配置
   output: {

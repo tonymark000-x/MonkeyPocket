@@ -2,7 +2,7 @@
   "name": "monkeypocket",
   "version": "1.0.0",
   "description": "Monkey Pocket - 魔法百宝袋管理系统",
-  "main": "src/index.js",
+  "main": "src/js/index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack serve",
     "build": "cross-env NODE_ENV=production webpack",
