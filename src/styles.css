@@ -72,13 +72,32 @@ body {
   border-bottom-color: var(--monkey-yellow);
 }
 
-/* 密码强度样式 */
+/* 注册表单样式 */
+#registerForm {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 验证模态框样式增强 */
+#verificationModal {
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+#verificationModal .modal-content {
+  transform: translateY(-20px);
+  animation: slideUp 0.3s ease-in-out forwards;
+}
+
+/* 密码强度指示器样式 */
+.password-strength {
+  margin-top: 0.5rem;
+}
+
 .strength-bar {
   height: 4px;
-  background: #ddd;
+  background: #444;
   border-radius: 2px;
-  margin-top: 5px;
-  transition: width 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .strength-bar.weak {
@@ -101,7 +120,74 @@ body {
   background: #00C851;
 }
 
-/* 验证模态框样式 */
-#verificationModal {
-  z-index: 1000;
+.strength-text {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  color: #aaa;
+  transition: color 0.3s ease;
+}
+
+.strength-text.weak {
+  color: #ff4444;
+}
+
+.strength-text.medium {
+  color: #ffdd44;
+}
+
+.strength-text.strong {
+  color: #44dd44;
+}
+
+.strength-text.very-strong {
+  color: #00C851;
+}
+
+/* 验证消息样式 */
+#verificationSuccess {
+  color: var(--success-color);
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: rgba(46, 213, 115, 0.1);
+  border-radius: 4px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+#verificationError {
+  color: var(--error-color);
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: rgba(255, 69, 0, 0.1);
+  border-radius: 4px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 表单切换动画 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  to { transform: translateY(0); }
+}
+
+/* 注册按钮悬停效果 */
+#registerBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 144, 255, 0.3);
+}
+
+/* 选项卡切换样式 */
+#showLogin, #showRegister {
+  transition: all 0.3s ease;
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+  .password-strength {
+    margin-bottom: 1rem;
+  }
 }

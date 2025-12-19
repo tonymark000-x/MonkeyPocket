@@ -53,6 +53,7 @@
     "authErrorEmailInUse": "该邮箱已被注册",
     "authErrorWeakPassword": "密码强度不够，请使用更强的密码",
     "authErrorOperationNotAllowed": "不允许的操作",
+    "authPasswordMismatch": "两次输入的密码不一致",
     
     "dashboardTitle": "欢迎回来，<span class='text-monkey-yellow text-shadow'>用户</span>！",
     "dashboardDescription": "这是您的Monkey Pocket仪表板。从这里管理您所有的百宝袋和物品。",
@@ -137,6 +138,7 @@
     "authErrorEmailInUse": "This email is already registered",
     "authErrorWeakPassword": "Password is too weak, please use a stronger password",
     "authErrorOperationNotAllowed": "Operation not allowed",
+    "authPasswordMismatch": "Passwords do not match",
     
     "dashboardTitle": "Welcome back, <span class='text-monkey-yellow text-shadow'>User</span>!",
     "dashboardDescription": "This is your Monkey Pocket dashboard. Manage all your pockets and items from here.",

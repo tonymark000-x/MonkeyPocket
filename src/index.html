@@ -254,7 +254,32 @@
               <span data-i18n="authLoginButton">登录</span>
             </button>
           </div>
+                <!-- 注册表单 -->
+    <div id="registerForm" class="hidden">
+      <input type="email" id="registerEmail" placeholder="邮箱">
+      <input type="password" id="registerPassword" placeholder="密码">
+      <input type="password" id="registerConfirmPassword" placeholder="确认密码">
+      <div class="password-strength">
+        <div class="strength-bar"></div>
+        <div class="strength-text"></div>
+      </div>
+      <input type="checkbox" id="termsAgree"> 同意条款
+      <button id="registerBtn">注册</button>
+      <div id="authError" class="hidden">
+        <span id="authErrorMsg"></span>
+      </div>
+    </div>
+  </div>
           
+  <!-- 验证模态框 -->
+<div id="verificationModal" class="hidden">
+  <h3 data-i18n="authVerifyTitle">验证您的邮箱</h3>
+  <p data-i18n="authVerifyMessage">我们已发送验证链接到您的邮箱</p>
+  <button id="resendVerification">重新发送验证邮件</button>
+  <div id="verificationSuccess" class="hidden"></div>
+  <div id="verificationError" class="hidden"></div>
+</div> 
+
           <!-- 分隔线 -->
           <div class="my-6 flex items-center">
             <div class="flex-1 border-t border-monkey-gray/50"></div>
