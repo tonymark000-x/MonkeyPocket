@@ -126,9 +126,18 @@ const AppState = {
       this.createDemoActivationCodes();
     }
     
+       // 检查URL哈希是否包含adminLogin
+     if (window.location.hash.includes('adminLogin')) {
+    this.showAdminLoginForm();
+     }
     this.setupFirebaseAuthListener();
   },
   
+  // 添加显示管理员登录表单的方法
+showAdminLoginForm() {
+  document.getElementById('firebaseAuthContainer').classList.add('hidden');
+  document.getElementById('adminLoginForm').classList.remove('hidden');
+},
   // 设置Firebase auth状态监听
   setupFirebaseAuthListener() {
     onAuthStateChanged(auth, user => {
@@ -168,7 +177,8 @@ const AppState = {
         pockets: [],
         recentActivity: []
       };
-      
+        // 显示导航栏
+  document.getElementById('navbar').classList.add('visible');
       localStorage.setItem(`user_${this.currentUser.id}_data`, JSON.stringify(userData));
     }
     
@@ -176,6 +186,13 @@ const AppState = {
     this.updateDashboard();
     this.showPage('dashboard');
   },
+
+  handleAdminLogin() {
+  // ... 现有登录验证代码
+  
+  // 显示导航栏
+  document.getElementById('navbar').classList.add('visible');
+},
   
   // 处理用户注册
   handleRegister() {
@@ -406,6 +423,7 @@ const AppState = {
         this.showAdminContent();
         this.updateAdminDashboard();
         this.showAdminPage('adminDashboard');
+          document.getElementById('navbar').classList.add('visible');
       } else {
         sessionStorage.removeItem('monkeyPocketAdmin');
       }

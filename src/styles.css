@@ -191,3 +191,12 @@ body {
     margin-bottom: 1rem;
   }
 }
+
+/* 在styles.css中添加 */
+#navbar {
+  display: none; /* 默认隐藏导航栏 */
+}
+
+#navbar.visible {
+  display: block; /* 登录后显示 */
+}
