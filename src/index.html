@@ -254,13 +254,33 @@
           </div>
                 <!-- 注册表单 -->
     <div id="registerForm" class="hidden">
-      <input type="email" id="registerEmail" placeholder="邮箱">
-      <input type="password" id="registerPassword" placeholder="密码">
-      <input type="password" id="registerConfirmPassword" placeholder="确认密码">
-      <div class="password-strength">
-        <div class="strength-bar"></div>
-        <div class="strength-text"></div>
-      </div>
+<div>
+  <label for="registerUsername" class="block text-sm font-medium text-gray-300 mb-1" data-i18n="authUsernameLabel">用户名</label>
+  <input type="text" id="registerUsername" class="w-full bg-monkey-gray/50 border border-monkey-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-monkey-blue transition-colors" placeholder="请输入用户名" required>
+</div>
+
+<!-- 修改原邮箱字段，添加正确的CSS类 -->
+<div>
+  <label for="registerEmail" class="block text-sm font-medium text-gray-300 mb-1" data-i18n="authEmailLabel">邮箱地址</label>
+  <!-- 添加了与登录表单一致的CSS类 -->
+  <input type="email" id="registerEmail" class="w-full bg-monkey-gray/50 border border-monkey-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-monkey-blue transition-colors" placeholder="your@email.com" required>
+</div>
+
+<div>
+  <label for="registerPassword" class="block text-sm font-medium text-gray-300 mb-1" data-i18n="authPasswordLabel">密码</label>
+  <!-- 确保密码字段有正确的CSS类 -->
+  <input type="password" id="registerPassword" class="w-full bg-monkey-gray/50 border border-monkey-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-monkey-blue transition-colors" placeholder="••••••••" required>
+  <div class="password-strength mt-2">
+    <div class="strength-bar"></div>
+    <div class="strength-text" data-i18n="authPasswordStrength"></div>
+  </div>
+</div>
+
+<!-- 添加确认密码字段 -->
+<div>
+  <label for="confirmPassword" class="block text-sm font-medium text-gray-300 mb-1" data-i18n="authConfirmPasswordLabel">确认密码</label>
+  <input type="password" id="confirmPassword" class="w-full bg-monkey-gray/50 border border-monkey-gray rounded-lg px-4 py-3 text-white focus:outline-none focus:border-monkey-blue transition-colors" placeholder="••••••••" required>
+</div>
       <input type="checkbox" id="termsAgree"> 同意条款
       <button id="registerBtn">注册</button>
       <div id="authError" class="hidden">

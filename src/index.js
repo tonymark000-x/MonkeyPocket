@@ -158,34 +158,33 @@ showAdminLoginForm() {
   },
   
   // 处理Firebase登录成功
-  handleFirebaseLogin(user) {
-    this.currentUser = {
-      id: user.uid,
-      email: user.email,
-      username: user.displayName || user.email.split('@')[0],
-      photoURL: user.photoURL,
-      emailVerified: user.emailVerified
+handleFirebaseLogin(user) {
+  this.currentUser = {
+    id: user.uid,
+    email: user.email,
+    username: user.displayName || user.email.split('@')[0],
+    photoURL: user.photoURL
+  };
+  
+  // 检查用户数据是否存在，不存在则初始化
+  if (!this.users[this.currentUser.email]) {
+    this.users[this.currentUser.email] = this.currentUser;
+    localStorage.setItem('monkeyPocketUsers', JSON.stringify(this.users));
+    
+    // 初始化用户数据
+    const userData = {
+      pockets: [],
+      recentActivity: []
     };
     
-    // 检查用户数据是否存在，不存在则初始化
-    if (!this.users[this.currentUser.email]) {
-      this.users[this.currentUser.email] = this.currentUser;
-      localStorage.setItem('monkeyPocketUsers', JSON.stringify(this.users));
-      
-      // 初始化用户数据
-      const userData = {
-        pockets: [],
-        recentActivity: []
-      };
-        // 显示导航栏
-  document.getElementById('navbar').classList.add('visible');
-      localStorage.setItem(`user_${this.currentUser.id}_data`, JSON.stringify(userData));
-    }
-    
-    this.showMainContent();
-    this.updateDashboard();
-    this.showPage('dashboard');
-  },
+    localStorage.setItem(`user_${this.currentUser.id}_data`, JSON.stringify(userData));
+  }
+  
+  // 确保调用显示主内容的方法
+  this.showMainContent();  // 关键修复：确保登录后显示主内容
+  this.updateDashboard();
+  this.showPage('dashboard');
+},
 
   handleAdminLogin() {
   // ... 现有登录验证代码
@@ -423,7 +422,6 @@ showAdminLoginForm() {
         this.showAdminContent();
         this.updateAdminDashboard();
         this.showAdminPage('adminDashboard');
-          document.getElementById('navbar').classList.add('visible');
       } else {
         sessionStorage.removeItem('monkeyPocketAdmin');
       }
@@ -712,13 +710,25 @@ showAdminLoginForm() {
   
   // 显示主内容
   showMainContent() {
-    const authPage = document.getElementById('authPage');
-    const adminContent = document.getElementById('adminContent');
-    const mainContent = document.getElementById('mainContent');
+      // 隐藏认证页面，显示主内容
+  document.getElementById('authPage').classList.add('hidden');
+  document.getElementById('mainContent').classList.remove('hidden');
+  document.getElementById('adminContent').classList.add('hidden');
+  
+  // 显示用户菜单，隐藏管理员菜单
+  document.getElementById('userMenu').classList.remove('hidden');
+  document.getElementById('adminMenu').classList.add('hidden');
+  
+  // 更新用户信息显示
+  if (this.currentUser) {
+    document.getElementById('usernameDisplay').textContent = this.currentUser.username;
+    document.getElementById('dropdownUsername').textContent = this.currentUser.username;
+    document.getElementById('dropdownEmail').textContent = this.currentUser.email;
     
-    if (authPage) authPage.classList.add('hidden');
-    if (adminContent) adminContent.classList.add('hidden');
-    if (mainContent) mainContent.classList.remove('hidden');
+    // 设置用户首字母
+    const initial = this.currentUser.username.charAt(0).toUpperCase();
+    document.getElementById('userInitial').textContent = initial;
+  }
   },
   
   // 显示管理员内容
